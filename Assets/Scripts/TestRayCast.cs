@@ -1,6 +1,7 @@
 using Ni.Mathematics;
 using Ni.Mathematics.Editor;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class TestRayCast : MonoBehaviour
@@ -26,16 +27,26 @@ public class TestRayCast : MonoBehaviour
         {
             if (primitive is Component component && !component.gameObject.activeInHierarchy)
                 continue;
-            if(primitive.RaycastT(Ray, MaxDistance, out var t))
+            if(primitive.Raycast(Ray, MaxDistance, out float tIn, out Direction3 nIn, out float tOut, out Direction3 nOut))
             {
                 ++hits;
-                var hit = Ray[t];
+                var hitIn = Ray[tIn];
+                var hitOut = Ray[tOut];
                 Gizmos.color = Color.red;
-                NiMathGizmos.DrawAaCross3(hit, HitCrossScale + HitCrossLogScale * Unity.Mathematics.math.log2(1 + t));
-                Gizmos.color = new Color(1, 0, 0, 0.3f);
-                Gizmos.DrawLine(Ray.origin, hit);
-            }
+                var scaleIn = HitCrossScale + HitCrossLogScale * Unity.Mathematics.math.log2(1 + tIn);
+                var scaleOut = HitCrossScale + HitCrossLogScale * Unity.Mathematics.math.log2(1 + tOut);
 
+                NiMathGizmos.DrawAaCross3(hitIn, scaleIn);
+                NiMathGizmos.DrawAaCross3(hitOut, scaleOut);
+                Gizmos.DrawLine(hitIn, hitOut);
+                Gizmos.color = new Color(1, 0, 0, 0.3f);
+                Gizmos.DrawLine(Ray.origin, hitIn);
+
+                Gizmos.color = new Color(1, 0.5f, 0, 1);
+                Gizmos.DrawLine(hitIn, hitIn + nIn.vector * scaleIn);
+                //Gizmos.color = new Color(1, 0.5f, 0, 1);
+                Gizmos.DrawLine(hitOut, hitOut + nOut.vector * scaleOut);
+            }
         }
         if(hits == 0)
         {

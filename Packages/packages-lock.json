@@ -149,7 +149,7 @@
       "dependencies": {
         "com.unity.mathematics": "1.2.6"
       },
-      "hash": "30be96a184fa92c227d996c323d973ab8bd69e40"
+      "hash": "1e0cfd2df48a77227b3ac9594e8cd4f606b1801e"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
